@@ -145,7 +145,8 @@ public class ValidationTest {
 
         final ConfigKeyPair keyPair = new FilesystemKeyPair(publicKeyPath, privateKeyPath, keyEncryptor);
 
-        final KeyConfiguration keyConfiguration = new KeyConfiguration(null, null, singletonList(keyPair), null, null);
+        final KeyConfiguration keyConfiguration =
+                new KeyConfiguration(null, null, singletonList(keyPair), null, null, null);
 
         final Set<ConstraintViolation<KeyConfiguration>> violations = validator.validate(keyConfiguration);
         assertThat(violations).hasSize(2);
@@ -168,7 +169,7 @@ public class ValidationTest {
 
         final ConfigKeyPair keyPair = new DirectKeyPair("notvalidbase64", "c==");
 
-        KeyConfiguration keyConfiguration = new KeyConfiguration(null, null, singletonList(keyPair), null, null);
+        KeyConfiguration keyConfiguration = new KeyConfiguration(null, null, singletonList(keyPair), null, null, null);
 
         Set<ConstraintViolation<KeyConfiguration>> violations = validator.validate(keyConfiguration);
         assertThat(violations).hasSize(1);
@@ -269,7 +270,7 @@ public class ValidationTest {
     @Test
     public void azureKeyPairProvidedWithoutKeyVaultConfigCreatesViolation() {
         AzureVaultKeyPair keyPair = new AzureVaultKeyPair("publicVauldId", "privateVaultId", null, null);
-        KeyConfiguration keyConfiguration = new KeyConfiguration(null, null, singletonList(keyPair), null, null);
+        KeyConfiguration keyConfiguration = new KeyConfiguration(null, null, singletonList(keyPair), null, null, null);
         Config config = new Config(null, null, null, keyConfiguration, null, null, false, false);
 
         Set<ConstraintViolation<Config>> violations = validator.validateProperty(config, "keys");
@@ -344,7 +345,7 @@ public class ValidationTest {
     public void nonKeyVaultPairProvidedWithoutAzureAndHashicorpKeyVaultConfigDoesNotCreateViolation() {
         DirectKeyPair keyPair = new DirectKeyPair("pub", "priv");
 
-        KeyConfiguration keyConfiguration = new KeyConfiguration(null, null, singletonList(keyPair), null, null);
+        KeyConfiguration keyConfiguration = new KeyConfiguration(null, null, singletonList(keyPair), null, null, null);
         Config config = new Config(null, null, null, keyConfiguration, null, null, false, false);
 
         Set<ConstraintViolation<Config>> violations = validator.validateProperty(config, "keys");
@@ -367,7 +368,7 @@ public class ValidationTest {
         AzureVaultKeyPair keyPair = new AzureVaultKeyPair("pubId", "privId", null, null);
         AzureKeyVaultConfig keyVaultConfig = new AzureKeyVaultConfig(null);
         KeyConfiguration keyConfiguration =
-                new KeyConfiguration(null, null, singletonList(keyPair), keyVaultConfig, null);
+                new KeyConfiguration(null, null, singletonList(keyPair), keyVaultConfig, null, null);
 
         Set<ConstraintViolation<KeyConfiguration>> violations = validator.validate(keyConfiguration);
         assertThat(violations).hasSize(1);
@@ -394,7 +395,7 @@ public class ValidationTest {
                 new HashicorpVaultKeyPair("pubId", "privId", "secretEngine", "secretName", null);
         HashicorpKeyVaultConfig keyVaultConfig = new HashicorpKeyVaultConfig();
         KeyConfiguration keyConfiguration =
-                new KeyConfiguration(null, null, singletonList(keyPair), null, keyVaultConfig);
+                new KeyConfiguration(null, null, singletonList(keyPair), null, keyVaultConfig, null);
 
         Set<ConstraintViolation<KeyConfiguration>> violations = validator.validate(keyConfiguration);
         assertThat(violations).hasSize(1);

@@ -60,7 +60,8 @@ public class CliKeyPasswordResolverTest {
 
         // null paths since we won't actually be reading them
         final ConfigKeyPair keypair = new FilesystemKeyPair(null, null, null);
-        final KeyConfiguration keyConfig = new KeyConfiguration(null, emptyList(), singletonList(keypair), null, null);
+        final KeyConfiguration keyConfig =
+                new KeyConfiguration(null, emptyList(), singletonList(keypair), null, null, null);
         final Config config = new Config();
         config.setKeys(keyConfig);
 
@@ -79,7 +80,7 @@ public class CliKeyPasswordResolverTest {
 
         // null paths since we won't actually be reading them
         final ConfigKeyPair keypair = new FilesystemKeyPair(null, null, null);
-        final KeyConfiguration keyConfig = new KeyConfiguration(null, null, singletonList(keypair), null, null);
+        final KeyConfiguration keyConfig = new KeyConfiguration(null, null, singletonList(keypair), null, null, null);
         final Config config = new Config();
         config.setKeys(keyConfig);
 
@@ -100,7 +101,7 @@ public class CliKeyPasswordResolverTest {
         final ConfigKeyPair keypair = new FilesystemKeyPair(null, null, null);
         final KeyConfiguration keyConfig =
                 new KeyConfiguration(
-                        null, singletonList("passwordsAssignedToKeys"), singletonList(keypair), null, null);
+                        null, singletonList("passwordsAssignedToKeys"), singletonList(keypair), null, null, null);
         final Config config = new Config();
         config.setKeys(keyConfig);
 
@@ -117,7 +118,7 @@ public class CliKeyPasswordResolverTest {
         final Path passes = Files.createTempDirectory("testdirectory").resolve("nonexistantfile.txt");
 
         final ConfigKeyPair keypair = new FilesystemKeyPair(null, null, null);
-        final KeyConfiguration keyConfig = new KeyConfiguration(passes, null, singletonList(keypair), null, null);
+        final KeyConfiguration keyConfig = new KeyConfiguration(passes, null, singletonList(keypair), null, null, null);
         final Config config = new Config();
         config.setKeys(keyConfig);
 
@@ -135,7 +136,7 @@ public class CliKeyPasswordResolverTest {
         Files.write(passes, "q".getBytes());
 
         final ConfigKeyPair keypair = new FilesystemKeyPair(null, null, null);
-        final KeyConfiguration keyConfig = new KeyConfiguration(passes, null, singletonList(keypair), null, null);
+        final KeyConfiguration keyConfig = new KeyConfiguration(passes, null, singletonList(keypair), null, null, null);
         final Config config = new Config();
         config.setKeys(keyConfig);
 
@@ -193,8 +194,10 @@ public class CliKeyPasswordResolverTest {
     public void lockedKeyWithEmptyPasswordRequestsPassword() {
         when(passwordReader.readPasswordFromConsole()).thenReturn("a");
 
-        final KeyDataConfig privKeyDataConfig = mock(KeyDataConfig.class);
-        when(privKeyDataConfig.getType()).thenReturn(PrivateKeyType.LOCKED);
+        final KeyDataConfig privKeyDataConfig =
+                mock(KeyDataConfig.class);
+                                when(privKeyDataConfig.getType()).thenReturn(
+                        PrivateKeyType.LOCKED);
         PrivateKeyData privateKeyData = mock(PrivateKeyData.class);
         when(privKeyDataConfig.getPrivateKeyData()).thenReturn(privateKeyData);
 
@@ -217,17 +220,15 @@ public class CliKeyPasswordResolverTest {
         final String invalidPassword = "invalidPassword";
 
         byte[] privateKeyBytes = Base64.getDecoder().decode("w+itzh2vfuGjiGYEVJtqpiJVUmI5vGUK4CzMErxa+GY=");
-        final PrivateKey unlockedKey = PrivateKey.from(privateKeyBytes);
-
-        final KeyDataConfig privKeyDataConfig =
-            new KeyDataConfig(
-                new PrivateKeyData(
-                    "Wl+xSyXVuuqzpvznOS7dOobhcn4C5auxkFRi7yLtgtA=",
-                    "yb7M8aRJzgxoJM2NecAPcmSVWDW1tRjv",
-                    "MIqkFlgR2BWEpx2U0rObGg==",
-                    "Gtvp1t6XZEiFVyaE/LHiP1+yvOIBBoiOL+bKeqcKgpiNt4j1oDDoqCC47UJpmQRC",
-                    new ArgonOptions("i", 10, 1048576, 4)),
-                PrivateKeyType.LOCKED);
+        final PrivateKey unlockedKey = PrivateKey.from(privateKeyBytes);final KeyDataConfig privKeyDataConfig =
+                new KeyDataConfig(
+                        new PrivateKeyData(
+                                "Wl+xSyXVuuqzpvznOS7dOobhcn4C5auxkFRi7yLtgtA=",
+                                "yb7M8aRJzgxoJM2NecAPcmSVWDW1tRjv",
+                                "MIqkFlgR2BWEpx2U0rObGg==",
+                                "Gtvp1t6XZEiFVyaE/LHiP1+yvOIBBoiOL+bKeqcKgpiNt4j1oDDoqCC47UJpmQRC",
+                                new ArgonOptions("i", 10, 1048576, 4)),
+                        PrivateKeyType.LOCKED);
 
         KeyEncryptor keyEncryptor = mock(KeyEncryptor.class);
         when(keyEncryptor.decryptPrivateKey(any(PrivateKeyData.class), eq(invalidPassword))).thenThrow(new EncryptorException("decrypt failed"));
@@ -239,8 +240,8 @@ public class CliKeyPasswordResolverTest {
         this.cliKeyPasswordResolver.getSingleKeyPassword(0, keyPair);
 
         assertThat(systemOutRule.getLog())
-            .containsOnlyOnce(
-                "Password for key[0] missing or invalid.\nAttempt 1 of 2. Enter a password for the key");
+                .containsOnlyOnce(
+                        "Password for key[0] missing or invalid.\nAttempt 1 of 2. Enter a password for the key");
     }
 
     @Test
@@ -248,17 +249,15 @@ public class CliKeyPasswordResolverTest {
         final String validPassword = "a";
 
         byte[] privateKeyBytes = Base64.getDecoder().decode("w+itzh2vfuGjiGYEVJtqpiJVUmI5vGUK4CzMErxa+GY=");
-        final PrivateKey unlockedKey = PrivateKey.from(privateKeyBytes);
-
-        final KeyDataConfig privKeyDataConfig =
-            new KeyDataConfig(
-                new PrivateKeyData(
-                    "Wl+xSyXVuuqzpvznOS7dOobhcn4C5auxkFRi7yLtgtA=",
-                    "yb7M8aRJzgxoJM2NecAPcmSVWDW1tRjv",
-                    "MIqkFlgR2BWEpx2U0rObGg==",
-                    "Gtvp1t6XZEiFVyaE/LHiP1+yvOIBBoiOL+bKeqcKgpiNt4j1oDDoqCC47UJpmQRC",
-                    new ArgonOptions("i", 10, 1048576, 4)),
-                PrivateKeyType.LOCKED);
+        final PrivateKey unlockedKey = PrivateKey.from(privateKeyBytes);final KeyDataConfig privKeyDataConfig =
+                new KeyDataConfig(
+                        new PrivateKeyData(
+                                "Wl+xSyXVuuqzpvznOS7dOobhcn4C5auxkFRi7yLtgtA=",
+                                "yb7M8aRJzgxoJM2NecAPcmSVWDW1tRjv",
+                                "MIqkFlgR2BWEpx2U0rObGg==",
+                                "Gtvp1t6XZEiFVyaE/LHiP1+yvOIBBoiOL+bKeqcKgpiNt4j1oDDoqCC47UJpmQRC",
+                                new ArgonOptions("i", 10, 1048576, 4)),
+                        PrivateKeyType.LOCKED);
 
         KeyEncryptor keyEncryptor = mock(KeyEncryptor.class);
         when(keyEncryptor.decryptPrivateKey(any(PrivateKeyData.class), eq(validPassword))).thenReturn(unlockedKey);

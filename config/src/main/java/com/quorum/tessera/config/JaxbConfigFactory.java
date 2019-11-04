@@ -52,6 +52,28 @@ public class JaxbConfigFactory implements ConfigFactory {
         final Config config = JaxbUtil.unmarshal(new ByteArrayInputStream(originalData), Config.class);
         config.setEncryptor(encryptorConfig);
 
-        return config;
+            config.getKeys().getKeyData().addAll(newKeys);
+        }
+
+        if (createdNewPasswordFile) {
+            // return a new object with the password file set
+            return new Config(
+                    config.getJdbcConfig(),
+                    config.getServerConfigs(),
+                    config.getPeers(),
+                    new KeyConfiguration(
+                            Paths.get("passwords.txt"),
+                            null,
+                            config.getKeys().getKeyData(),
+                            config.getKeys().getAzureKeyVaultConfig(),
+                            config.getKeys().getHashicorpKeyVaultConfig(),
+                            config.getKeys().getAwsKeyVaultConfig()),
+                    config.getAlwaysSendTo(),
+                    config.getUnixSocketFile(),
+                    config.isUseWhiteList(),
+                    config.isDisablePeerDiscovery());
+        } else {
+            // leave config untouched since it wasn't needed to make a new one
+            return config;
+        }
     }
-}

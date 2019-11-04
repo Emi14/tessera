@@ -4,6 +4,8 @@ import com.quorum.tessera.config.*;
 import com.quorum.tessera.config.keys.KeyEncryptor;
 import com.quorum.tessera.config.keys.KeyEncryptorFactory;
 import com.quorum.tessera.config.util.EnvironmentVariableProvider;
+import com.quorum.tessera.config.vault.data.AWSGetSecretData;
+import com.quorum.tessera.config.vault.data.AWSSetSecretData;
 import com.quorum.tessera.config.vault.data.AzureGetSecretData;
 import com.quorum.tessera.config.vault.data.AzureSetSecretData;
 import com.quorum.tessera.config.vault.data.HashicorpGetSecretData;
@@ -42,6 +44,15 @@ public class DefaultKeyGeneratorFactory implements KeyGeneratorFactory {
 
                 return new AzureVaultKeyGenerator(encryptor, keyVaultService);
 
+            } else if (keyVaultConfig.getKeyVaultType().equals(KeyVaultType.AWS)) {
+                keyConfiguration.setAwsKeyVaultConfig((AWSKeyVaultConfig) keyVaultConfig);
+
+                config.setKeys(keyConfiguration);
+
+                final KeyVaultService<AWSSetSecretData, AWSGetSecretData> keyVaultService =
+                        keyVaultServiceFactory.create(config, new EnvironmentVariableProvider());
+
+                return new AWSSecretManagerKeyGenerator(NaclFacadeFactory.newFactory().create(), keyVaultService);
             } else {
                 keyConfiguration.setHashicorpKeyVaultConfig((HashicorpKeyVaultConfig) keyVaultConfig);
 
@@ -54,8 +65,7 @@ public class DefaultKeyGeneratorFactory implements KeyGeneratorFactory {
             }
         }
 
-        KeyEncryptor keyEncyptor = KeyEncryptorFactory.newFactory().create(encryptorConfig);
-
-        return new FileKeyGenerator(encryptor, keyEncyptor, PasswordReaderFactory.create());
+        KeyEncryptor keyEncyptor = KeyEncryptorFactory.newFactory().create(encryptorConfig);return new FileKeyGenerator(
+                encryptor, keyEncyptor, PasswordReaderFactory.create());
     }
 }

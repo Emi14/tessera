@@ -39,17 +39,21 @@ public class KeyConfiguration extends ConfigItem {
 
     @Valid @XmlElement private HashicorpKeyVaultConfig hashicorpKeyVaultConfig;
 
+    @Valid @XmlElement private AWSKeyVaultConfig awsKeyVaultConfig;
+
     public KeyConfiguration(
             final Path passwordFile,
             final List<String> passwords,
             final List<ConfigKeyPair> keyData,
             final AzureKeyVaultConfig azureKeyVaultConfig,
-            final HashicorpKeyVaultConfig hashicorpKeyVaultConfig) {
+            final HashicorpKeyVaultConfig hashicorpKeyVaultConfig,
+            final AWSKeyVaultConfig awsKeyVaultConfig) {
         this.passwordFile = passwordFile;
         this.passwords = passwords;
         this.keyData = keyData;
         this.azureKeyVaultConfig = azureKeyVaultConfig;
         this.hashicorpKeyVaultConfig = hashicorpKeyVaultConfig;
+        this.awsKeyVaultConfig = awsKeyVaultConfig;
     }
 
     public KeyConfiguration() {}
@@ -74,6 +78,10 @@ public class KeyConfiguration extends ConfigItem {
         return hashicorpKeyVaultConfig;
     }
 
+    public AWSKeyVaultConfig getAwsKeyVaultConfig() {
+        return this.awsKeyVaultConfig;
+    }
+
     public void setPasswordFile(Path passwordFile) {
         this.passwordFile = passwordFile;
     }
@@ -92,5 +100,9 @@ public class KeyConfiguration extends ConfigItem {
 
     public void setHashicorpKeyVaultConfig(HashicorpKeyVaultConfig hashicorpKeyVaultConfig) {
         this.hashicorpKeyVaultConfig = hashicorpKeyVaultConfig;
+    }
+
+    public void setAwsKeyVaultConfig(AWSKeyVaultConfig awsKeyVaultConfig) {
+        this.awsKeyVaultConfig = awsKeyVaultConfig;
     }
 }
