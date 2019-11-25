@@ -194,10 +194,8 @@ public class CliKeyPasswordResolverTest {
     public void lockedKeyWithEmptyPasswordRequestsPassword() {
         when(passwordReader.readPasswordFromConsole()).thenReturn("a");
 
-        final KeyDataConfig privKeyDataConfig =
-                mock(KeyDataConfig.class);
-                                when(privKeyDataConfig.getType()).thenReturn(
-                        PrivateKeyType.LOCKED);
+        final KeyDataConfig privKeyDataConfig = mock(KeyDataConfig.class);
+        when(privKeyDataConfig.getType()).thenReturn(PrivateKeyType.LOCKED);
         PrivateKeyData privateKeyData = mock(PrivateKeyData.class);
         when(privKeyDataConfig.getPrivateKeyData()).thenReturn(privateKeyData);
 
@@ -276,7 +274,6 @@ public class CliKeyPasswordResolverTest {
         when(passwordReader.readPasswordFromConsole()).thenReturn("invalid", "a");
 
         PrivateKeyData privateKeyData = mock(PrivateKeyData.class);
-
         final KeyDataConfig privKeyDataConfig = mock(KeyDataConfig.class);
         when(privKeyDataConfig.getPrivateKeyData()).thenReturn(privateKeyData);
         when(privKeyDataConfig.getType()).thenReturn(PrivateKeyType.LOCKED);
