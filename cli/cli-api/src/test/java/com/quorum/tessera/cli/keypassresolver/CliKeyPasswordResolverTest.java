@@ -60,8 +60,7 @@ public class CliKeyPasswordResolverTest {
 
         // null paths since we won't actually be reading them
         final ConfigKeyPair keypair = new FilesystemKeyPair(null, null, null);
-        final KeyConfiguration keyConfig =
-                new KeyConfiguration(null, emptyList(), singletonList(keypair), null, null, null);
+        final KeyConfiguration keyConfig = new KeyConfiguration(null, emptyList(), singletonList(keypair), null, null, null);
         final Config config = new Config();
         config.setKeys(keyConfig);
 
@@ -274,6 +273,7 @@ public class CliKeyPasswordResolverTest {
         when(passwordReader.readPasswordFromConsole()).thenReturn("invalid", "a");
 
         PrivateKeyData privateKeyData = mock(PrivateKeyData.class);
+        
         final KeyDataConfig privKeyDataConfig = mock(KeyDataConfig.class);
         when(privKeyDataConfig.getPrivateKeyData()).thenReturn(privateKeyData);
         when(privKeyDataConfig.getType()).thenReturn(PrivateKeyType.LOCKED);
