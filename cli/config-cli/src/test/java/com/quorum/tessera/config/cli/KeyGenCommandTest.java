@@ -442,7 +442,7 @@ public class KeyGenCommandTest {
     }
 
     @Test
-    public void hashicorpTlsPathsDontExistThrowsException() {
+    public void hashicorpTlsPathsDontExistThrowsException() throws Exception {
         final String vaultUrl = "someurl";
         final String approlePath = "someapprole";
         final Path nonExistentPath = Paths.get(UUID.randomUUID().toString());

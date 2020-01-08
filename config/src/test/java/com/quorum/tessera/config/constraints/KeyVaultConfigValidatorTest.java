@@ -68,7 +68,7 @@ public class KeyVaultConfigValidatorTest {
     }
 
     @Test
-    public void validHashicorpConfig() throws Exception {
+    public void validHahicorpConfig() throws Exception {
 
         Path somePath = Files.createTempFile(UUID.randomUUID().toString(), ".txt");
         somePath.toFile().deleteOnExit();
@@ -82,7 +82,7 @@ public class KeyVaultConfigValidatorTest {
     }
 
     @Test
-    public void invalidHashicorpConfig() {
+    public void invalidHahicorpConfig() throws Exception {
 
         Path somePath = mock(Path.class);
 
